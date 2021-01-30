@@ -6,6 +6,7 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 
 np.random.seed(1)
 
+
 # ============================================= TARGET FUNCTION ========================================================
 def f(x):
     return x * np.sin(x)
@@ -17,7 +18,6 @@ kernel = C(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
 # ============================================== WITHOUT NOISE =========================================================
 X = np.reshape([1., 3., 5., 6., 7., 8.], (1, -1)).T
 y = f(X).reshape(-1)
-
 
 gp = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=10)
 gp.fit(X, y)
@@ -38,7 +38,6 @@ plt.xlabel('$x$')
 plt.ylabel('$f(x)$')
 plt.ylim(-10, 20)
 plt.legend(loc='upper left')
-
 
 # ================================================ WITH NOISE ==========================================================
 X = np.reshape(np.linspace(0.1, 9.9, 20), (1, -1)).T
