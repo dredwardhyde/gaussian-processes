@@ -38,7 +38,7 @@ y_pred_linear = lm.predict(X_test_transform)
 plt.figure()
 plt.plot(x, f(x), 'r:', label=r'$f(x) = x\,\sin(x)$')
 plt.plot(X, y, 'r.', markersize=10, label='Observations')
-plt.plot(x, y_pred, 'b-', label='Prediction')
+plt.plot(x, y_pred, 'b-', label='GP regression')
 plt.fill(np.concatenate([x, x[::-1]]),
          np.concatenate([y_pred - 1.9600 * sigma,
                          (y_pred + 1.9600 * sigma)[::-1]]),
@@ -72,7 +72,7 @@ y_pred_linear = lm.predict(X_test_transform)
 plt.figure()
 plt.plot(x, f(x), 'r:', label=r'$f(x) = x\,\sin(x)$')
 plt.errorbar(X, y, dy, fmt='r.', markersize=10, label='Observations')
-plt.plot(x, y_pred, 'b-', label='Prediction')
+plt.plot(x, y_pred, 'b-', label='GP regression')
 plt.fill(np.concatenate([x, x[::-1]]),
          np.concatenate([y_pred - 1.9600 * sigma,
                          (y_pred + 1.9600 * sigma)[::-1]]),
