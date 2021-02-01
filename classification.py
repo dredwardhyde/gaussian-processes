@@ -16,7 +16,6 @@ shuffled = random.sample(range(len(X)), SAMPLE_SIZE)
 
 X_train = [X[x] for x in shuffled]
 Y_train = [y[x] for x in shuffled]
-
 test_shuffled = set(range(len(X))) - set(shuffled)
 
 X_test = [X[x] for x in test_shuffled]
@@ -28,6 +27,4 @@ gp = GaussianProcessClassifier(kernel=RBF(length_scale=1.0), optimizer=None,
 gp.fit(X_train, Y_train)
 
 y_predicted = gp.predict(X_test[0:500])
-print(y_predicted)
-print(y_test[0:500])
 print("Accuracy: %.3f" % (accuracy_score(y_test[0:500], y_predicted)))
