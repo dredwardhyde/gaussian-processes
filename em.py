@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import multivariate_normal
 
 
+# calculating the responsibilities of Gaussians for creating the given training data point
 def e_step(X, means, covs, mixing_coefs):
     responsibilities = np.zeros((X.shape[0], means.shape[0]))
     num = np.zeros(mixing_coefs.shape[0])
@@ -16,6 +17,8 @@ def e_step(X, means, covs, mixing_coefs):
     return responsibilities
 
 
+# given the responsibilities, we update the parameters of Gaussians - the means,
+# covariance matrices and mixing coeeficients
 def m_step(X, responsibilities):
     N = np.zeros(responsibilities.shape[1])
     # iterate over clusters
