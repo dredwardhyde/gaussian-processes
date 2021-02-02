@@ -1,59 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
-
-sns.set_style('whitegrid')
 from scipy.stats import multivariate_normal
-
-
-def bivariate_normal(X, Y, sigmax=1.0, sigmay=1.0,
-                     mux=0.0, muy=0.0, sigmaxy=0.0):
-    Xmu = X - mux
-    Ymu = Y - muy
-
-    rho = sigmaxy / (sigmax * sigmay)
-    z = Xmu ** 2 / sigmax ** 2 + Ymu ** 2 / sigmay ** 2 - 2 * rho * Xmu * Ymu / (sigmax * sigmay)
-    denom = 2 * np.pi * sigmax * sigmay * np.sqrt(1 - rho ** 2)
-    return np.exp(-z / (2 * (1 - rho ** 2))) / denom
-
-
-def normalize_data(X):
-    X_norm = np.zeros(X.shape)
-    X_norm[:, 0] = (X[:, 0] - np.amin(X[:, 0])) / (np.amax(X[:, 0]) - np.amin(X[:, 0]))
-    X_norm[:, 1] = (X[:, 1] - np.amin(X[:, 1])) / (np.amax(X[:, 1]) - np.amin(X[:, 1]))
-    return X_norm
-
-
-def gmm_log_likelihood(X, means, covs, mixing_coefs):
-    sum2 = 0
-    for i in range(X.shape[0]):
-        sum1 = 0
-        for k in range(mixing_coefs.shape[0]):
-            sum1 += mixing_coefs[k] * multivariate_normal.pdf(X[i], mean=means[k], cov=covs[k])
-        sum2 += np.log(sum1)
-    log_likelihood = sum2
-    return log_likelihood
-
-
-X = np.loadtxt('Old Faithful geyser.txt')
-X_norm = normalize_data(X)
-
-plt.figure(figsize=[6, 6])
-plt.scatter(X_norm[:, 0], X_norm[:, 1]);
-plt.xlabel('Eruptions (minutes)')
-plt.ylabel('Waiting time (minutes)')
-X_norm = normalize_data(X)
-max_iters = 20
-
-# Initialize the parameters
-means = np.array([[0.2, 0.6], [0.8, 0.4]])
-covs = np.array([0.5 * np.eye(2), 0.5 * np.eye(2)])
-mixing_coefs = np.array([0.5, 0.5])
-
-old_log_likelihood = gmm_log_likelihood(X_norm, means, covs, mixing_coefs)
-
-print('At initialization: log-likelihood = {0}'
-      .format(old_log_likelihood))
 
 
 def e_step(X, means, covs, mixing_coefs):
@@ -96,41 +43,41 @@ def m_step(X, responsibilities):
 
 def plot_gmm_2d(X, responsibilities, means, covs, mixing_coefs):
     plt.figure(figsize=[6, 6])
-    palette = np.array(sns.color_palette('colorblind', n_colors=3))[[0, 2]]
+    palette = [[1, 0, 0], [0, 0, 1]]
     colors = responsibilities.dot(palette)
     # Plot the samples colored according to p(z|x)
     plt.scatter(X[:, 0], X[:, 1], c=colors, alpha=0.5)
     # Plot locations of the means
     for ix, m in enumerate(means):
-        plt.scatter(m[0], m[1], s=300, marker='X', c=palette[ix],
-                    edgecolors='k', linewidths=1, )
+        plt.scatter(m[0], m[1], s=150, marker='X', color=palette[ix], edgecolors='k', linewidths=1, )
     # Plot contours of the Gaussian
-    x = np.linspace(0, 1, 50)
-    y = np.linspace(0, 1, 50)
-    xx, yy = np.meshgrid(x, y)
+    x, y = np.mgrid[0:1:0.02, 0:1:0.02]
+    pos = np.dstack((x, y))
     for k in range(len(mixing_coefs)):
-        zz = bivariate_normal(xx, yy, np.sqrt(covs[k][0, 0]),
-                              np.sqrt(covs[k][1, 1]),
-                              means[k][0], means[k][1], covs[k][0, 1])
-        plt.contour(xx, yy, zz, 2, colors='k')
+        rv = multivariate_normal([means[k][0], means[k][1]], [[covs[k][0, 0], covs[k][0, 1]],
+                                                              [covs[k][0, 1], covs[k][1, 1]]])
+        plt.contour(x, y, rv.pdf(pos), 2, colors='k')
     plt.xlim(0, 1)
     plt.ylim(0, 1)
 
 
+X = np.loadtxt('Old Faithful geyser.txt')
+X_norm = np.zeros(X.shape)
+X_norm[:, 0] = (X[:, 0] - np.amin(X[:, 0])) / (np.amax(X[:, 0]) - np.amin(X[:, 0]))
+X_norm[:, 1] = (X[:, 1] - np.amin(X[:, 1])) / (np.amax(X[:, 1]) - np.amin(X[:, 1]))
+max_iters = 20
+
+# Initialize the parameters
+means = np.array([[0.2, 0.6], [0.8, 0.4]])
+covs = np.array([0.5 * np.eye(2), 0.5 * np.eye(2)])
+mixing_coefs = np.array([0.5, 0.5])
 responsibilities = e_step(X_norm, means, covs, mixing_coefs)
-print('At initialization: log-likelihood = {0}'
-      .format(old_log_likelihood))
 plot_gmm_2d(X_norm, responsibilities, means, covs, mixing_coefs)
 
 # Perform the EM iteration
 for i in range(max_iters):
     responsibilities = e_step(X_norm, means, covs, mixing_coefs)
     means, covs, mixing_coefs = m_step(X_norm, responsibilities)
-    new_log_likelihood = gmm_log_likelihood(X_norm, means, covs, mixing_coefs)
-    # Report & visualize the optimization progress
-    print('Iteration {0}: log-likelihood = {1:.2f}, improvement = {2:.2f}'
-          .format(i, new_log_likelihood, new_log_likelihood - old_log_likelihood))
-    old_log_likelihood = new_log_likelihood
-    plot_gmm_2d(X_norm, responsibilities, means, covs, mixing_coefs)
 
+plot_gmm_2d(X_norm, responsibilities, means, covs, mixing_coefs)
 plt.show()
