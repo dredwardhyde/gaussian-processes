@@ -13,11 +13,10 @@
 
 # EM algorithm for Gaussian Mixtures
 
-## [Classification](https://github.com/dredwardhyde/gaussian-processes/blob/main/em.py)  
-
 ## Theory
 <img src="https://raw.githubusercontent.com/dredwardhyde/gaussian-processes/main/em_theory.png" width="708"/>  
 
+## [Classification](https://github.com/dredwardhyde/gaussian-processes/blob/main/em.py)  
 ### Start  
 <img src="https://raw.githubusercontent.com/dredwardhyde/gaussian-processes/main/em_start.png" width="600"/>  
 
