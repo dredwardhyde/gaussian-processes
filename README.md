@@ -11,9 +11,12 @@
 [MNIST 92.4% accuracy](https://github.com/dredwardhyde/gaussian-processes/blob/main/classification.py)  
 
 
-# EM algorithm  
+# EM algorithm for Gaussian Mixtures
 
 ## [Classification](https://github.com/dredwardhyde/gaussian-processes/blob/main/em.py)  
+
+## Theory
+<img src="https://raw.githubusercontent.com/dredwardhyde/gaussian-processes/main/em_theory.png" width="708"/>  
 
 ### Start  
 <img src="https://raw.githubusercontent.com/dredwardhyde/gaussian-processes/main/em_start.png" width="600"/>  
