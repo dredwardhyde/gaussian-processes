@@ -23,10 +23,22 @@ test_xs = x = np.reshape(np.linspace(0.1, 10, test_points), (1, -1)).T
 test_xs = np.reshape(test_xs, (test_points, 1))
 test_ys = target_fn(test_xs)
 
+ResBlock = stax.serial(
+    stax.FanOut(2),
+    stax.parallel(
+        stax.serial(
+            stax.Erf(),
+            stax.Dense(512, W_std=1.1, b_std=0),
+        ),
+        stax.Identity()
+    ),
+    stax.FanInSum()
+)
+
 init_fn, apply_fn, kernel_fn = stax.serial(
-    stax.Dense(2, W_std=2.5, b_std=0.05), stax.Erf(),
-    stax.Dense(2, W_std=2.5, b_std=0.05), stax.Erf(),
-    stax.Dense(1)
+    stax.Dense(512, W_std=1, b_std=0),
+    ResBlock, ResBlock, stax.Erf(),
+    stax.Dense(1, W_std=1.5, b_std=0)
 )
 
 kernel_fn = jit(kernel_fn, static_argnums=(2,))
