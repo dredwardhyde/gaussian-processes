@@ -29,10 +29,8 @@ ResBlock = stax.serial(
         stax.serial(
             stax.Erf(),
             stax.Dense(512, W_std=1.1, b_std=0),
-        ),
-        stax.Identity()
-    ),
-    stax.FanInSum()
+        ), stax.Identity()
+    ), stax.FanInSum()
 )
 
 init_fn, apply_fn, kernel_fn = stax.serial(
