@@ -22,3 +22,10 @@
 
 ### Finish  
 <img src="https://raw.githubusercontent.com/dredwardhyde/gaussian-processes/main/em_end.png" width="600"/>  
+
+
+# Neural Tangent Kernels
+
+## [Regression](https://github.com/dredwardhyde/gaussian-processes/blob/main/ntk.py)  
+### With noise  
+<img src="https://raw.githubusercontent.com/dredwardhyde/gaussian-processes/main/ntk.png" width="640"/>  
