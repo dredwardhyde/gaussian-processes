@@ -29,3 +29,9 @@
 ## [Regression](https://github.com/dredwardhyde/gaussian-processes/blob/main/ntk.py)  
 ### With noise  
 <img src="https://raw.githubusercontent.com/dredwardhyde/gaussian-processes/main/ntk.png" width="640"/>  
+
+
+# Probabilistic PCA  
+
+## Results  
+<img src="https://raw.githubusercontent.com/dredwardhyde/gaussian-processes/main/probabilistic_pca.png" width="640"/>  
